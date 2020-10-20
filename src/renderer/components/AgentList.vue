@@ -237,7 +237,7 @@ export default {
           //console.log("response message", response);
           //TODO: Validate signature against invite.
           //console.log("connection sig b64 data", response['connection~sig'].sig_data);
-          let buff = new Buffer(response['connection~sig'].sig_data, 'base64');
+          let buff = Buffer.from(response['connection~sig'].sig_data, 'base64');
           let text = buff.toString('ascii');
           //first 8 chars are a timestamp for the signature, so we ignore those before parsing value
           response.connection = JSON.parse(text.substring(8));
