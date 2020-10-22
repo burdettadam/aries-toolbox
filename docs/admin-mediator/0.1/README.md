@@ -1,5 +1,5 @@
 Mediator Admin Protocol
-==========================
+=======================
 
 ## Overview
 
@@ -11,8 +11,12 @@ routing tables of in service mediation clients.
 ### Protocol Messages
 - [mediation-requests-get](#mediation-requests-get)
 - [mediation-requests](#mediation-requests)
-- [keylists-get](#keylists-get)
-- [keylists](#keylists)
+- [mediation-grant](#mediation-grant)
+- [mediation-granted](#mediation-granted)
+- [mediation-deny](#mediation-deny)
+- [mediation-denied](#mediation-denied)
+- [routes-get](#routes-get)
+- [routes](#routes)
 
 ## Message Definitions
 
@@ -76,42 +80,92 @@ Example:
 
 `recipient_terms`: Terms required by recipient.
 
-### keylists-get
-Retrieve keylists (routing tables) managed by the mediator.
+### mediation-grant
+Grant a mediation request.
 
 Example:
 ```jsonc
 {
-  "@type": "...admin-mediator/0.1/keylists-get",
+  "@type": "...admin-mediator/0.1/mediation-grant",
+  "mediation_id": "ba4a50a8-b9ab-4333-b48c-fb7663b768d3"
+}
+```
+
+`mediation_id`: ID of mediation request to grant.
+
+### mediation-granted
+Notification of mediation grant send.
+
+Example:
+```jsonc
+{
+  "@type": "...admin-mediator/0.1/mediation-grant",
+  "mediation_id": "ba4a50a8-b9ab-4333-b48c-fb7663b768d3"
+}
+```
+
+`mediation_id`: ID of granted mediation request.
+
+### mediation-deny
+Deny a mediation request.
+
+Example:
+```jsonc
+{
+  "@type": "...admin-mediator/0.1/mediation-deny",
+  "mediation_id": "ba4a50a8-b9ab-4333-b48c-fb7663b768d3"
+}
+```
+
+`mediation_id`: ID of mediation request to deny.
+
+### mediation-denied
+Notification of mediation deny send.
+
+Example:
+```jsonc
+{
+  "@type": "...admin-mediator/0.1/mediation-deny",
+  "mediation_id": "ba4a50a8-b9ab-4333-b48c-fb7663b768d3"
+}
+```
+
+`mediation_id`: ID of denied mediation request.
+
+### routes-get
+Retrieve routes managed by the mediator.
+
+Example:
+```jsonc
+{
+  "@type": "...admin-mediator/0.1/routes-get",
   "connection_id": "2fc59239-7def-4a00-abe5-b01046bc991b"
 }
 ```
 
 `connection_id`: (Optional) Retrieve routing tables for connection ID.
 
-### keylists
-Response to `keylists-get` message.
+### routes
+Response to `routes-get` message.
 
 Example:
 ```jsonc
 {
-  "@type": "...admin-mediator/0.1/keylists",
-  "keylists": [
+  "@type": "...admin-mediator/0.1/routes",
+  "routes": [
     {
       "connection_id": "2fc59239-7def-4a00-abe5-b01046bc991b",
-      "keylist": [
-        "G5GEUNKYdZjQbjyAZi294U...",
-        ...
-      ]
-    }
+      "recipient_key": "G5GEUNKYdZjQbjyAZi294U...",
+    },
+    ...
   ]
 }
 ```
 
-`keylists`: List of connection ID to key list mappings.
+`routes`: List of connection ID to key list mappings.
 
-#### Keylist (list item)
+#### Route (list item)
 
 `connection_id`: Connection ID associated with keys
 
-`keylist`: List of recipient keys routed to this connection.
+`recipient_key`: Key routed to this connection.
